@@ -1,0 +1,5 @@
+[example_group]
+zwindler01 custom_ip='192.168.1.101' vsphere_datastore='VMFS01' ansible_host_group='example_group'
+zwindler02 custom_ip='192.168.1.102' vsphere_datastore='VMFS01' ansible_host_group='example_group'
+zwindler03 custom_ip='192.168.1.103' vsphere_datastore='VMFS01' ansible_host_group='example_group'
+zwindler04 custom_ip='192.168.1.104' vsphere_datastore='VMFS01' ansible_host_group='example_group'

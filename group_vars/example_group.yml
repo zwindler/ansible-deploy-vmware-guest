@@ -1,0 +1,15 @@
+---
+#Usual VMware guest deployment variables for example_group group
+vsphere_host: "my-vcenter-host.zwindler.fr"
+vsphere_user: "poweruser"
+vsphere_datacenter: "myDC"
+vsphere_folder: "/TO_DEPLOY"
+guest_network: VM_Network
+guest_netmask: 255.255.255.0
+guest_gateway: 192.168.1.1
+guest_dns_server: 192.168.1.10
+guest_domain_name: zwindler.fr
+guest_id: rhel7_64Guest
+guest_memory: 2048
+guest_vcpu: 2
+guest_template: my_template

@@ -1,0 +1,65 @@
+---
+# get date
+- set_fact: creationdate="{{lookup('pipe','date "+%Y/%m/%d %H:%M"')}}"
+
+# Create a VM from a template
+- name: create the VM
+  vmware_guest:
+    hostname: '{{ vsphere_host }}'
+    username: '{{ vsphere_user }}'
+    password: '{{ vsphere_password }}'
+    validate_certs: no
+    esxi_hostname: '{{ esxi_host }}'
+    datacenter: '{{ vsphere_datacenter }}'
+    folder: '{{ vsphere_folder }}'
+    name: '{{ inventory_hostname }}'
+    state: poweredon
+    guest_id: '{{ guest_id }}'
+    annotation: "{{ notes }} - {{ creationdate }}"
+    disk:
+    - size_gb: 150
+      type: thin
+      datastore: '{{ vsphere_datastore }}'
+    networks:
+    - name: '{{ guest_network }}'
+      ip: '{{ guest_custom_ip }}'
+      netmask: '{{ guest_netmask }}'
+      gateway: '{{ guest_gateway }}'
+      dns_servers:
+      - '{{ guest_dns_server }}'
+    hardware:
+      memory_mb: '{{ guest_memory }}'
+      num_cpus: '{{ guest_vcpu }}'
+    customization:
+      dns_servers:
+      - '{{ guest_dns_server }}'
+      domain : '{{ guest_domain_name }}'
+      hostname: '{{ inventory_hostname }}'
+    template: '{{ guest_template }}'
+    wait_for_ip_address: yes
+  delegate_to: localhost
+
+- name: add to ansible hosts file
+  lineinfile:
+    dest: /etc/ansible/hosts
+    insertafter: '^\[{{ ansible_host_group }}\]'
+    line: '{{ item }}'
+  with_items: '{{play_hosts}}'
+  run_once: true
+  delegate_to: localhost
+
+- name: add to /etc/hosts file
+  lineinfile:
+    dest: /etc/hosts
+    line: '{{ custom_ip }} {{ inventory_hostname }}'
+  with_items: '{{play_hosts}}'
+  when: "hostvars[item].inventory_hostname == inventory_hostname"
+  delegate_to: localhost
+
+- name: accept new ssh fingerprints
+  shell: ssh-keyscan {{ custom_ip }},{{inventory_hostname}} >> ~/.ssh/known_hosts
+  with_items: '{{play_hosts}}'
+  when: "hostvars[item].inventory_hostname == inventory_hostname"
+  delegate_to: localhost
+
+- setup:

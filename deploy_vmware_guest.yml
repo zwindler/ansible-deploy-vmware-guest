@@ -1,0 +1,20 @@
+---
+- hosts: all
+  gather_facts: false
+  
+  vars_prompt:
+    - name: "vsphere_password"
+      prompt: "vSphere Password"
+    - name: "esxi_host"
+      promt: "ESXi host"
+      private: no
+      default: "my_esxi_default_server"
+    - name: "notes"
+      prompt: "VM notes"
+      private: no
+      default: "Deployed with ansible"
+
+  roles:
+     - deploy_vmware_guest
+     #- other roles to execute directly inside VM after deployment
+     #- ...

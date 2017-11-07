@@ -51,13 +51,13 @@
 - name: add to /etc/hosts file
   lineinfile:
     dest: /etc/hosts
-    line: '{{ custom_ip }} {{ inventory_hostname }}'
+    line: '{{ guest_custom_ip }} {{ inventory_hostname }}'
   with_items: '{{play_hosts}}'
   when: "hostvars[item].inventory_hostname == inventory_hostname"
   delegate_to: localhost
 
 - name: accept new ssh fingerprints
-  shell: ssh-keyscan {{ custom_ip }},{{inventory_hostname}} >> ~/.ssh/known_hosts
+  shell: ssh-keyscan {{ guest_custom_ip }},{{inventory_hostname}} >> ~/.ssh/known_hosts
   with_items: '{{play_hosts}}'
   when: "hostvars[item].inventory_hostname == inventory_hostname"
   delegate_to: localhost

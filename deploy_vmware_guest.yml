@@ -6,7 +6,7 @@
     - name: "vsphere_password"
       prompt: "vSphere Password"
     - name: "esxi_host"
-      promt: "ESXi host"
+      prompt: "ESXi host"
       private: no
       default: "my_esxi_default_server"
     - name: "notes"
